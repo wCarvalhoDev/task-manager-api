@@ -2,6 +2,7 @@ package com.weverton.cadastrotarefas.services;
 
 import com.weverton.cadastrotarefas.entities.Tarefa;
 import com.weverton.cadastrotarefas.repositories.TarefaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,10 +21,11 @@ public class TarefaService {
     }
 
     public Tarefa buscarPorId(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Tarefa não encontrada."));
     }
 
-    public Tarefa salvarTarefa(Tarefa tarefa) {
+    public Tarefa criarTarefa(Tarefa tarefa) {
         return repository.save(tarefa);
     }
 

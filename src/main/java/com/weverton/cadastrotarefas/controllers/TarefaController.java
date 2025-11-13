@@ -2,8 +2,11 @@ package com.weverton.cadastrotarefas.controllers;
 
 import com.weverton.cadastrotarefas.entities.Tarefa;
 import com.weverton.cadastrotarefas.services.TarefaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,32 +20,40 @@ public class TarefaController {
     }
 
     @GetMapping
-    public List<Tarefa> listarTodas() {
-        return service.listarTodas();
+    public ResponseEntity<List<Tarefa>> listarTodas() {
+        List<Tarefa> tarefas = service.listarTodas();
+        return ResponseEntity.ok().body(tarefas);
     }
 
     @GetMapping("/{id}")
-    public Tarefa buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    public ResponseEntity<Tarefa> buscarPorId(@PathVariable Long id) {
+        Tarefa tarefa = service.buscarPorId(id);
+        return ResponseEntity.ok(tarefa);
     }
 
     @PostMapping
-    public Tarefa criarTarefa(@RequestBody Tarefa tarefa) {
-        return service.salvarTarefa(tarefa);
+    public ResponseEntity<Tarefa> criarTarefa(@RequestBody Tarefa tarefa) {
+        tarefa = service.criarTarefa(tarefa);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(tarefa.getId()).toUri();
+        return ResponseEntity.created(uri).body(tarefa);
     }
 
     @PutMapping("/{id}")
-    public Tarefa atualizar(@PathVariable Long id, @RequestBody Tarefa tarefa) {
-        return service.atualizar(id, tarefa);
+    public ResponseEntity<Tarefa> atualizar(@PathVariable Long id, @RequestBody Tarefa tarefa) {
+        tarefa = service.atualizar(id, tarefa);
+        return ResponseEntity.ok(tarefa);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/completed")
-    public List<Tarefa> completedTask(){
-        return service.completedTasks();
+    public ResponseEntity<List<Tarefa>>completedTask(){
+        List<Tarefa> tarefas = service.completedTasks();
+        return ResponseEntity.ok(tarefas);
     }
 }
