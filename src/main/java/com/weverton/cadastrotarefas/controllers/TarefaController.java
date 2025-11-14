@@ -1,7 +1,11 @@
 package com.weverton.cadastrotarefas.controllers;
 
+import com.weverton.cadastrotarefas.dto.TarefaRequestDTO;
+import com.weverton.cadastrotarefas.dto.TarefaResponseDTO;
 import com.weverton.cadastrotarefas.entities.Tarefa;
 import com.weverton.cadastrotarefas.services.TarefaService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -13,16 +17,17 @@ import java.util.List;
 @RequestMapping(value = "/tarefas")
 public class TarefaController {
 
-    private final TarefaService service;
-
-    public TarefaController(TarefaService service) {
-        this.service = service;
-    }
+    @Autowired
+    private TarefaService service;
 
     @GetMapping
-    public ResponseEntity<List<Tarefa>> listarTodas() {
+    public ResponseEntity<List<TarefaResponseDTO>> listarTodas() {
         List<Tarefa> tarefas = service.listarTodas();
-        return ResponseEntity.ok().body(tarefas);
+
+        List<TarefaResponseDTO> response = tarefas.stream()
+                .map(TarefaResponseDTO::new)
+                .toList();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
@@ -32,17 +37,24 @@ public class TarefaController {
     }
 
     @PostMapping
-    public ResponseEntity<Tarefa> criarTarefa(@RequestBody Tarefa tarefa) {
-        tarefa = service.criarTarefa(tarefa);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(tarefa.getId()).toUri();
-        return ResponseEntity.created(uri).body(tarefa);
+    public ResponseEntity<TarefaResponseDTO> criarTarefa(@Valid @RequestBody TarefaRequestDTO dto) {
+        Tarefa tarefa = service.criarTarefa(dto);
+
+        TarefaResponseDTO response = new TarefaResponseDTO(tarefa);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(tarefa.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarefa> atualizar(@PathVariable Long id, @RequestBody Tarefa tarefa) {
-        tarefa = service.atualizar(id, tarefa);
-        return ResponseEntity.ok(tarefa);
+    public ResponseEntity<TarefaResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody TarefaRequestDTO requestDTO) {
+        Tarefa tarefa = service.atualizar(id, requestDTO);
+        TarefaResponseDTO response = new TarefaResponseDTO(tarefa);
+        return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{id}")

@@ -1,48 +1,33 @@
-package com.weverton.cadastrotarefas.entities;
+package com.weverton.cadastrotarefas.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
-@Entity
-@Table(name = "tarefa")
-public class Tarefa implements Serializable {
+public class TarefaRequestDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String title;
-    @Column(name = "user_name")
+    @NotBlank(message = "Usuário obrigatório")
     private String user_name;
+
+    @NotBlank(message = "O título é obrigatório")
+    private String title;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime creationDate;
 
+    @Size(max = 255, message = "A descrição deve ter no máximo 225 caracteres.")
     private String description;
-    private boolean completed = false;
 
-    public Tarefa() {
-    }
+    private boolean completed;
 
-    public Tarefa(Long id, String title, String user_name, LocalDateTime creationDate, String description, boolean completed) {
-        this.id = id;
-        this.title = title;
+    public TarefaRequestDTO(String user_name, String title, LocalDateTime creationDate, String description, boolean completed) {
         this.user_name = user_name;
+        this.title = title;
         this.creationDate = creationDate;
         this.description = description;
         this.completed = completed;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -57,8 +42,8 @@ public class Tarefa implements Serializable {
         return user_name;
     }
 
-    public void setUser_name(String user) {
-        this.user_name = user;
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
     public LocalDateTime getCreationDate() {
@@ -83,17 +68,5 @@ public class Tarefa implements Serializable {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Tarefa tarefa = (Tarefa) o;
-        return Objects.equals(id, tarefa.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }
