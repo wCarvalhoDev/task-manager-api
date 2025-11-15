@@ -31,9 +31,9 @@ public class TarefaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tarefa> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<TarefaResponseDTO> buscarPorId(@PathVariable Long id) {
         Tarefa tarefa = service.buscarPorId(id);
-        return ResponseEntity.ok(tarefa);
+        return ResponseEntity.ok(new TarefaResponseDTO(tarefa));
     }
 
     @PostMapping

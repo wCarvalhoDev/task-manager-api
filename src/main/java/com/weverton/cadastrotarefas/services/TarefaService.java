@@ -7,6 +7,7 @@ import com.weverton.cadastrotarefas.repositories.TarefaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,8 @@ public class TarefaService {
         tarefa.setUser_name(dto.getUser_name());
         tarefa.setTitle(dto.getTitle());
         tarefa.setDescription(dto.getDescription());
-        tarefa.setCreationDate(dto.getCreationDate());
+        tarefa.setCreationDate(LocalDateTime.now());
+        tarefa.setCompleted(dto.isCompleted());
 
         return repository.save(tarefa);
     }
