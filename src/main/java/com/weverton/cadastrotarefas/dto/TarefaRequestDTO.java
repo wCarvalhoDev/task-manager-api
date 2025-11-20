@@ -14,16 +14,13 @@ public class TarefaRequestDTO {
     @Size(max = 255, message = "A descrição deve ter no máximo 255 caracteres.")
     private String description;
 
-    private boolean completed;
-
     public TarefaRequestDTO() {
     }
 
-    public TarefaRequestDTO(String user_name, String title, String description, boolean completed) {
+    public TarefaRequestDTO(String user_name, String title, String description) {
         this.user_name = user_name;
         this.title = title;
         this.description = description;
-        this.completed = completed;
     }
 
     public String getTitle() {
@@ -48,13 +45,5 @@ public class TarefaRequestDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
     }
 }

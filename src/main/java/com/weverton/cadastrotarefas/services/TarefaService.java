@@ -35,7 +35,6 @@ public class TarefaService {
         tarefa.setTitle(dto.getTitle());
         tarefa.setDescription(dto.getDescription());
         tarefa.setCreationDate(LocalDateTime.now());
-        tarefa.setCompleted(dto.isCompleted());
 
         return repository.save(tarefa);
     }
@@ -48,7 +47,6 @@ public class TarefaService {
         t.setTitle(dto.getTitle());
         t.setUser_name(dto.getUser_name());
         t.setDescription(dto.getDescription());
-        t.setCompleted(dto.isCompleted());
 
         return repository.save(t);
     }
@@ -59,5 +57,21 @@ public class TarefaService {
 
     public List<Tarefa> completedTasks() {
         return repository.findByCompletedTrue();
+    }
+
+    public Tarefa marcarComoConcluida(Long id){
+        Tarefa t = repository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Tarefa não encontrada"));
+
+        t.setCompleted(true);
+        return repository.save(t);
+    }
+
+    public Tarefa marcarComoPendente(Long id){
+        Tarefa t = repository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Tarefa não encontrada"));
+
+        t.setCompleted(false);
+        return repository.save(t);
     }
 }

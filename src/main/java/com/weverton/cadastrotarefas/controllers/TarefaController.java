@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -64,8 +65,20 @@ public class TarefaController {
     }
 
     @GetMapping("/completed")
-    public ResponseEntity<List<Tarefa>>completedTask(){
+    public ResponseEntity<List<Tarefa>> completedTask() {
         List<Tarefa> tarefas = service.completedTasks();
         return ResponseEntity.ok(tarefas);
+    }
+
+    @PatchMapping("/{id}/concluir")
+    public ResponseEntity<Tarefa> marcarComoCompleta(@PathVariable Long id) {
+        Tarefa tarefa = service.marcarComoConcluida(id);
+        return ResponseEntity.ok(tarefa);
+    }
+
+    @PatchMapping("/{id}/pendente")
+    public ResponseEntity<Tarefa> marcarComoPendente(@PathVariable Long id){
+        Tarefa tarefa = service.marcarComoPendente(id);
+        return ResponseEntity.ok(tarefa);
     }
 }
