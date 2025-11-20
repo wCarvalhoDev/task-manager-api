@@ -64,9 +64,9 @@ public class TarefaController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/completed")
-    public ResponseEntity<List<Tarefa>> completedTask() {
-        List<Tarefa> tarefas = service.completedTasks();
+    @GetMapping("/completas")
+    public ResponseEntity<List<Tarefa>> tarefasCompletas() {
+        List<Tarefa> tarefas = service.tarefasCompletas();
         return ResponseEntity.ok(tarefas);
     }
 

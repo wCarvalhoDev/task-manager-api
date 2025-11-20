@@ -55,7 +55,7 @@ public class TarefaService {
         repository.deleteById(id);
     }
 
-    public List<Tarefa> completedTasks() {
+    public List<Tarefa> tarefasCompletas() {
         return repository.findByCompletedTrue();
     }
 
